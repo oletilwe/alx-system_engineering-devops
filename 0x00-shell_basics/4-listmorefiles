@@ -1,2 +1,2 @@
 #!/bin/bash
-pwd -a . ls -l
+pwd ls -a
