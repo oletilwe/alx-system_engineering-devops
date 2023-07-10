@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -type d -not -path '*/\.*' -mindepth 1 | wc -l
