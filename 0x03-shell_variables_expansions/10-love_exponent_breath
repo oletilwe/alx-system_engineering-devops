@@ -1,2 +1,2 @@
 #!/bin/bash
-echo $(bc <<< "scale=2; $BREATH ^ $LOVE")
+awk -v breath="$BREATH" -v love="$LOVE" 'BEGIN{print breath^love}'
