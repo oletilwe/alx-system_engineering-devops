@@ -1,2 +1,2 @@
 #!/bin/bash
-awk -v breath="$BREATH" -v love="$LOVE" 'BEGIN{print breath^love}'
+echo $((BREATH**LOVE))
