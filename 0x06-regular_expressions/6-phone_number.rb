@@ -1,3 +1,2 @@
 #!/usr/bin/env ruby
-# 6-phone_number.rb
-\d{3}-\d{3}-\d{4}
+puts ARGV[0].scan(/^\d{10,10}$/).join
