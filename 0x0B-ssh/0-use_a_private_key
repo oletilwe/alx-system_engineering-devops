@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+server="460951-web-01"
+user="ubuntu"
+
+ssh -i ~/.ssh/school $user@$server
