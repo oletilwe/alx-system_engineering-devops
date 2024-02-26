@@ -5,6 +5,6 @@ key_bits=4096
 read -s -p "Enter passphrase for the key: " passphrase
 echo
 
-ssh-keygen -t rsa -b $key_bits -f ~/.ssh/$key_name -N "$passphrase"
+ssh-keygen -t rsa -b 4096 -f ~/.ssh/school -N "$passphrase"
 
 echo "RSA key pair created successfully."
