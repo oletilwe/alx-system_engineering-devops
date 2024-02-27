@@ -1,8 +1,17 @@
 #!/usr/bin/env bash
-sudo apt-get update
-sudo apt-get install -y nginx
-echo "<html><head><title>Hello World Page</title></head><body><h1>Hello World!</h1></body></html>" | sudo tee /var/www/html/index.html
-sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
-sudo sed -i 's/\blisten 80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+echo -e "Updating and installing Nginx.\n"
+sudo apt-get update -y -qq && \
+	 sudo apt-get install nginx -y
+
+echo -e "\nSetting up some minor stuff.\n"
+sudo service nginx start
+sudo ufw allow 'Nginx HTTP'
+sudo chown -R "$USER":"$USER" /var/www/html
+sudo chmod -R 755 /var/www
+cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
+echo -e "Hello World!" | dd status=none of=/var/www/html/index.nginx-debian.html
 sudo service nginx restart
-echo "Nginx has been installed and configured. It is now listening on port 80."
+
+echo -e "\nCompleted. ✅\n"
