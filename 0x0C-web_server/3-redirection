@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+sudo apt-get update
+sudo apt-get install -y nginx
+echo -e "location /redirect_me {\n    return 301 http://www.example.com/new_page;\n}" | sudo tee /etc/nginx/sites-available/default
+sudo ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
+sudo service nginx restart
+echo "Nginx has been configured to redirect /redirect_me to http://www.example.com/new_page with a 301 Moved Permanently status."
