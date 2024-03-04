@@ -1,36 +1,37 @@
 #!/usr/bin/env bash
-sudo apt-get update
-sudo apt-get install -y nginx
+# Installs Nginx with the following configurations:
+#+    Listens on port 80.
+#+    Returns a page containing "Hello World!" when queried
+#+     at the root with a curl GET request.
+#+    Configures /redirect_me as a "301 Moved Permanently".
+#+    Includes a custom 404 page containing "Ceci n'est pas une page".
+#+    Contains a custom HTTP header named X-Served-By.
+#+    The value of the HTTP header is the hostname of the running server.
 
-custom_header_name="X-Served-By"
-server_hostname=$(hostname)
+apt-get install -y nginx
 
-echo "Adding custom header to Nginx configuration..."
-sudo bash -c "cat > /etc/nginx/sites-available/default" <<EOF
-server {
+mkdir -p /var/www/html
+touch /var/www/html/index.html
+echo "Hello World!" > /var/www/html/index.html
+touch /var/www/html/404.html
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+printf %s "server {
     listen 80 default_server;
     listen [::]:80 default_server;
+    add_header X-Served-By $HOSTNAME;
+    root   /var/www/html;
+    index  index.html index.htm;
 
-    server_name _;
-
-    location / {
-        add_header $custom_header_name $server_hostname;
-        # Other Nginx configuration settings
-        # ...
+    location /redirect_me {
+        return 301 http://facebook.com/;
     }
 
-    # Additional server blocks and configurations if needed
-}
-EOF
+    error_page 404 /404.html;
+    location /404 {
+      root /var/www/html;
+      internal;
+    }
+}" > /etc/nginx/sites-available/default
 
-echo "Testing Nginx configuration..."
-sudo nginx -t
-
-if [ $? -eq 0 ]; then
-    echo "Restarting Nginx..."
-    sudo service nginx restart
-else
-    echo "Error: Nginx configuration test failed. Please check the configuration."
-fi
-
-echo "Configuration completed."
+service nginx restart

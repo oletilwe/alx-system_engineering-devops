@@ -1,48 +1,24 @@
 #!/usr/bin/env bash
-if [ "$(id -u)" -ne 0 ]; then
-    echo "Please run with sudo or as root."
-    exit 1
-fi
+# Installs HAProxy with the following configurations:
+# - Enables management via the init script.
+# - Distributes requests using a round-robin algorithm.
 
-echo "Installing HAProxy..."
-apt-get update
-apt-get install -y haproxy
+sudo apt-get install -y haproxy
 
-echo "Configuring HAProxy..."
+echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
-cp /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+cat <<EOT | sudo tee -a /etc/haproxy/haproxy.cfg
+frontend Randommall.tech
+    timeout client  30000
+    bind 0:80
+    default_backend Randommall.tech_backend
 
-cat <<EOF > /etc/haproxy/haproxy.cfg
-global
-    log /dev/log local0
-    log /dev/log local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
-    stats timeout 30s
-    user haproxy
-    group haproxy
-    daemon
-
-defaults
-    log global
-    mode http
-    option httplog
-    option dontlognull
-    timeout connect 5000
-    timeout client 50000
-    timeout server 50000
-
-frontend main
-    bind *:80
-    default_backend app
-
-backend app
+backend Randommall.tech_backend
+    timeout connect  3000
+    timeout server  30000
     balance roundrobin
-    server web-01 [STUDENT_ID]-web-01:80 check
-    server web-02 [STUDENT_ID]-web-02:80 check
-EOF
+    server 228560-web-01 54.89.224.2:80 check
+    server 228560-web-02 54.87.109.20:80 check
+EOT
 
-systemctl enable haproxy
-systemctl restart haproxy
-
-echo "HAProxy installation and configuration completed."
+sudo service haproxy restart
