@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+sudo apt update
+sudo apt install -y net-tools
+
+nginx_status=$(sudo service nginx status)
+echo "Nginx Status: $nginx_status"
+
+nginx_conf="/etc/nginx/nginx.conf"
+nginx_site_conf="/etc/nginx/sites-available/default"
+
+if [ -f "$nginx_conf" ]; then
+    echo "Checking $nginx_conf"
+
+else
+    echo "$nginx_conf not found!"
+fi
+
+if [ -f "$nginx_site_conf" ]; then
+    echo "Checking $nginx_site_conf"
+
+else
+    echo "$nginx_site_conf not found!"
+fi
+
+nginx_test=$(sudo nginx -t 2>&1)
+echo "Nginx Configuration Test: $nginx_test"
+
+sudo service nginx restart
+
+nginx_status=$(sudo service nginx status)
+echo "Nginx Status after restart: $nginx_status"
