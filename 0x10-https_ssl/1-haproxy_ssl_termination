@@ -28,7 +28,7 @@ defaults
     timeout server 50000
 
 frontend www-https
-    bind *:443 ssl crt /etc/letsencrypt/live/www.your_domain.com/fullchain.pem
+    bind *:443 ssl crt /etc/letsencrypt/live/www.holberton.online/fullchain.pem
     reqadd X-Forwarded-Proto:\ https
     default_backend www-backend
 

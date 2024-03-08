@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 sudo nano /etc/haproxy/haproxy.cfg
 
-frontend www-http
+frontend http-redirect
     bind *:80
     mode http
-    redirect scheme https code 301 if !{ ssl_fc }
+    option forwardfor
+    reqadd X-Forwarded-Proto:\ http
+    acl is_ssl dst_port eq 443
+    redirect scheme https code 301 if !is_ssl
 
 frontend www-https
     bind *:443 ssl crt /etc/letsencrypt/live/www.your_domain.com/fullchain.pem
