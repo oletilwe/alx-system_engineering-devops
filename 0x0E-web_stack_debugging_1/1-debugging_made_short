@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+apt-get update
+apt-get install -y nginx
+nginx
+echo "server { listen 80; server_name _; }" > /etc/nginx/sites-available/default
+nginx -s reload
