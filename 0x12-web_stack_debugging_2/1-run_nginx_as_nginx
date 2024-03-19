@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+nginx_conf="/etc/nginx/nginx.conf"
+sudo sed -i '/user\s\+nginx;/d' $nginx_conf
+sudo sed -i '/listen\s\+80;/d' $nginx_conf
+sudo sed -i '/^http {/a \\n    listen 8080 default_server;\n    listen [::]:8080 default_server;\n    server_tokens off;\n' $nginx_conf
+sudo sed -i '/^http {/a \    user nginx;\n' $nginx_conf
+sudo systemctl restart nginx
