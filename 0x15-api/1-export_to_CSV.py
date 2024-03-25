@@ -6,9 +6,9 @@ This script takes an employee ID as a command-line argument and exports
 the corresponding user information and to-do list to a JSON file.
 """
 
+import csv
 import requests
 import sys
-import csv
 
 
 def fetch_todo_list_and_export_to_csv(employee_id):
