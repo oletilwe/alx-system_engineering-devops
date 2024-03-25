@@ -10,10 +10,13 @@ It then prints the tasks completed by the employee.
 import requests
 import sys
 
+
 def fetch_todo_list_progress(employee_id):
 
     user_url = f"https://jsonplaceholder.typicode.com/users/{employee_id}"
-    todos_url = f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+    todos_url = (
+            f"https://jsonplaceholder.typicode.com/todos?userId={employee_id}"
+            )
 
     user_response = requests.get(user_url)
     if user_response.status_code == 200:
@@ -32,10 +35,14 @@ def fetch_todo_list_progress(employee_id):
     total_tasks = len(todos)
     completed_tasks = sum(1 for todo in todos if todo['completed'])
 
-    print(f"Employee {employee_name} is done with tasks({completed_tasks}/{total_tasks}):")
+    print(
+            f"Employee {employee_name} is done with tasks"
+            f"({completed_tasks}/{total_tasks}):"
+            )
     for todo in todos:
         if todo['completed']:
             print(f"\t {todo['title']}")
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
